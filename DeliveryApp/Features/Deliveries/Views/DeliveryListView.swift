@@ -52,11 +52,10 @@ struct DeliveryListView: View {
             configurations: config
         ))
        
-        // Insert some sample data
-        for delivery in MockDeliveryData.sampleDeliveries {
-            modelContext.insert(delivery)
-        }
-        
+//        for delivery in MockDeliveryData.sampleDeliveries {
+//            modelContext.insert(delivery)
+//        }
+//        
         return DeliveryListView(modelContext: modelContext)
     }()
 }

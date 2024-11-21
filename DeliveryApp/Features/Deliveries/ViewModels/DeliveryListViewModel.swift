@@ -17,15 +17,15 @@ class DeliveryListViewModel {
     var favorites = [Favorite]()
     var isLoading = false
     var currentPage = 1
+    var errorMessage: String?
     
-
     private let deliveryService: DeliveryService
     
     init( modelContext: ModelContext, deliveryService: DeliveryService = DeliveryAPIService()) {
         self.modelContext = modelContext
         self.deliveryService = deliveryService
     }
-        
+    
     func fetchDeliveryData() {
         do {
             let descriptor = FetchDescriptor<Delivery>()
@@ -33,17 +33,6 @@ class DeliveryListViewModel {
             
         } catch {
             print("Fetch delivery failed")
-        }
-    }
-    
-    @MainActor
-    func fetchfavoriteData() {
-        do {
-            let descriptor = FetchDescriptor<Favorite>()
-            favorites = try modelContext.fetch(descriptor)
-            print(favorites)
-        } catch {
-            print("Fetch favorite failed")
         }
     }
     
@@ -75,13 +64,23 @@ class DeliveryListViewModel {
                 }
             }
             fetchDeliveryData()
-            print(deliveries)
             currentPage += 1
         } catch {
-            print("Error fetching deliveries: \(error)")
+            errorMessage = "Error fetching deliveries: \(error)"
         }
         
         isLoading = false
+    }
+    
+    @MainActor
+    func fetchfavoriteData() {
+        do {
+            let descriptor = FetchDescriptor<Favorite>()
+            favorites = try modelContext.fetch(descriptor)
+            print(favorites)
+        } catch {
+            print("Fetch favorite failed")
+        }
     }
     
     @MainActor
