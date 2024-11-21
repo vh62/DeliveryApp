@@ -24,9 +24,19 @@ class DeliveryAPIService: DeliveryService {
     }
     
     func getDeliveries(page: Int? = nil, limit: Int? = nil) async throws -> [Delivery] {
-        let url = try urlBuilder.buildURL(endpoint: endpoint, page: page, limit: limit)
-        let data = try await networkService.fetchData(from: url)
-        return try responseHandler.decode(data)
+       do {
+           let url = try urlBuilder.buildURL(endpoint: endpoint, page: page, limit: limit)
+           let data = try await networkService.fetchData(from: url)
+           return try responseHandler.decode(data)
+       } catch URLError.badServerResponse {
+           throw APIError.invalidResponse
+       } catch URLError.notConnectedToInternet {
+           throw APIError.unableToComplete
+       } catch is DecodingError {
+           throw APIError.invalidData
+       } catch {
+           throw APIError.unableToComplete
+       }
     }
 }
 

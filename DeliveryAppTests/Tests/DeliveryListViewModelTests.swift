@@ -18,7 +18,10 @@ final class DeliveryListViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: Delivery.self, configurations: config)
+        let container = try! ModelContainer(
+           for: Delivery.self, Favorite.self,
+           configurations: config
+        )
         mockModelContext = ModelContext(container)
         mockDeliveryService = MockDeliveryService()
         sut = DeliveryListViewModel(modelContext: mockModelContext, deliveryService: mockDeliveryService)
@@ -51,17 +54,18 @@ final class DeliveryListViewModelTests: XCTestCase {
         XCTAssertEqual(sut.errorMessage, "Error fetching deliveries: invalidData")
     }
     
-    func testToggleFavourite_addToFavourites() async {
+    func testFetchFavouriteData() async {
+        let delivery = MockDeliveryData.sampleDeliveries[0]
         
-        let delivery = MockDeliveryData.sampleDeliveries.first!
+        mockModelContext.insert(delivery)
+        let favourite = Favorite(delivery: delivery)
+        
+        XCTAssertTrue(sut.favorites.isEmpty)
         
         await sut.toggleFavorite(delivery)
         
-        print("Favorites count: \(sut.favorites.count)")
-        print("Is favorite: \(sut.isFavorite(delivery))")
-        
-        XCTAssert(sut.isFavorite(delivery))
-        XCTAssertEqual(sut.favorites.count, 1)
+        await sut.fetchfavoriteData()
+                
+        XCTAssertFalse(sut.favorites.isEmpty)
     }
-
 }

@@ -2,22 +2,20 @@
 //  MockNetworkService.swift
 //  DeliveryAppTests
 //
-//  Created by Vikram on 21/11/24.
+//  Created by Vikram on 22/11/24.
 //
 
 import Foundation
 @testable import DeliveryApp
 
-class MockDeliveryService: DeliveryService {
-    var result: Result<[Delivery], Error> = .success([])
-    
-    func getDeliveries(page: Int? = nil, limit: Int? = nil) async throws -> [Delivery] {
-        switch result {
-        case .success(let deliveries):
-            return deliveries
-        case .failure(let error):
-            throw error
-        }
-    }
+class MockNetworkService: NetworkService {
+   var mockData: Data?
+   var mockError: Error?
+   
+   func fetchData(from url: URL) async throws -> Data {
+       if let error = mockError {
+           throw error
+       }
+       return mockData ?? Data()
+   }
 }
-
