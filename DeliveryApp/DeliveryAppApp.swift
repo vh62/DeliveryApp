@@ -10,23 +10,24 @@ import SwiftData
 
 @main
 struct DeliveryAppApp: App {
-    var sharedModelContainer: ModelContainer = {
+    var container: ModelContainer = {
         let schema = Schema([
-            Item.self,
-        ])
+            Delivery.self,
+            Favorite.self
+            ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DeliveryListView(modelContext: container.mainContext)
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(container)
     }
 }
+
