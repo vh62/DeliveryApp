@@ -7,21 +7,19 @@
 
 import Foundation
 import SwiftUI
+import Kingfisher
 
 struct RemoteImage: View {
-    @StateObject private var viewModel = ImageViewModel()
     let urlString: String
     
     var body: some View {
-        (viewModel.image?.resizable() ?? Image(systemName: "photo"))
-            .onAppear {
-                viewModel.loadImage(fromURLString: urlString)
+        KFImage(URL(string: urlString))
+            .placeholder {
+                Image(systemName: "photo")
             }
+            .resizable()
+            .cacheOriginalImage()
+            .diskCacheExpiration(.never)
+            .memoryCacheExpiration(.never)
     }
-}
-
-
-#Preview {
-    RemoteImage(urlString: "https://loremflickr.com/320/240/cat?lock=9953")
-           .frame(width: 150, height: 150)
 }
