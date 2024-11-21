@@ -65,5 +65,3 @@ class Delivery: Decodable {
         self.sender = sender
     }
 }
-
-
