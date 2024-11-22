@@ -78,7 +78,6 @@ class DeliveryListViewModel {
         do {
             let descriptor = FetchDescriptor<Favorite>()
             favorites = try modelContext.fetch(descriptor)
-            print(favorites)
         } catch {
             errorMessage = "Error fetching favorites: \(error)"
         }
