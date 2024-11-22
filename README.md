@@ -46,6 +46,7 @@ iOS app for managing deliveries and favorites using SwiftUI and SwiftData.
 * iOS 17.0+
 * Xcode 15+
 * CocoaPods
+* Compile on swift 5!
 
 ## Installation
 ```bash
