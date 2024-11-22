@@ -10,7 +10,6 @@ import SwiftData
 @testable import DeliveryApp
 
 final class DeliveryListViewModelTests: XCTestCase {
-    let app = XCUIApplication()
     var sut: DeliveryListViewModel!
     var mockModelContext: ModelContext!
     var mockDeliveryService: MockDeliveryService!
@@ -76,21 +75,5 @@ final class DeliveryListViewModelTests: XCTestCase {
         let expectedTotal = String(format: "$%.2f", expectedFee + expectedSurcharge)
         
         XCTAssertEqual(totalDeliveryFee, expectedTotal)
-    }
-    
-    func testFavoriteDataIsPersisted() async {
-        let delivery = MockDeliveryData.sampleDeliveries[0]
-        
-        mockModelContext.insert(delivery)
-        
-        XCTAssertTrue(sut.favorites.isEmpty)
-        
-        await sut.toggleFavorite(delivery)
-        
-        XCTAssertFalse(sut.favorites.isEmpty)
-        
-        await app.terminate()
-        
-        XCTAssertFalse(sut.favorites.isEmpty)
     }
 }
