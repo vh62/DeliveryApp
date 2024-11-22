@@ -39,7 +39,7 @@ struct DeliveryDetailView: View {
                 HStack {
                     Text("Delivery Fee")
                     Spacer()
-                    Text(delivery.deliveryFee)
+                    Text(viewModel.calculateDeliveryFee(for: delivery))
                 }
                 Spacer()
                 Button {

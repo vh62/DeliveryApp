@@ -35,9 +35,9 @@ struct DeliveryRow: View {
             VStack {
                 if viewModel.isFavorite(delivery) {
                     Image(systemName: "heart.fill")
-                    Text(delivery.deliveryFee)
+                    Text(viewModel.calculateDeliveryFee(for: delivery))
                 } else {
-                    Text(delivery.deliveryFee)
+                    Text(viewModel.calculateDeliveryFee(for: delivery))
                 }
             }
         }

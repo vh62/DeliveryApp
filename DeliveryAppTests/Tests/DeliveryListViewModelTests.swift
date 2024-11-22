@@ -10,7 +10,7 @@ import SwiftData
 @testable import DeliveryApp
 
 final class DeliveryListViewModelTests: XCTestCase {
-
+    
     var sut: DeliveryListViewModel!
     var mockModelContext: ModelContext!
     var mockDeliveryService: MockDeliveryService!
@@ -19,8 +19,8 @@ final class DeliveryListViewModelTests: XCTestCase {
         super.setUp()
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try! ModelContainer(
-           for: Delivery.self, Favorite.self,
-           configurations: config
+            for: Delivery.self, Favorite.self,
+            configurations: config
         )
         mockModelContext = ModelContext(container)
         mockDeliveryService = MockDeliveryService()
@@ -37,7 +37,7 @@ final class DeliveryListViewModelTests: XCTestCase {
     func testFetchDeliveries() async throws {
         
         mockDeliveryService.result = .success(MockDeliveryData.sampleDeliveries)
-       
+        
         await sut.fetchDeliveries()
         
         XCTAssert(sut.deliveries.count == MockDeliveryData.sampleDeliveries.count)
@@ -50,7 +50,7 @@ final class DeliveryListViewModelTests: XCTestCase {
         await sut.fetchDeliveries()
         
         XCTAssert(sut.deliveries.isEmpty)
-                
+        
         XCTAssertEqual(sut.errorMessage, "Error fetching deliveries: invalidData")
     }
     
@@ -58,14 +58,25 @@ final class DeliveryListViewModelTests: XCTestCase {
         let delivery = MockDeliveryData.sampleDeliveries[0]
         
         mockModelContext.insert(delivery)
-        let favourite = Favorite(delivery: delivery)
         
         XCTAssertTrue(sut.favorites.isEmpty)
         
         await sut.toggleFavorite(delivery)
         
         await sut.fetchfavoriteData()
-                
+        
         XCTAssertFalse(sut.favorites.isEmpty)
+    }
+    
+    func testcalculateDeliveryFee() {
+        let delivery = MockDeliveryData.sampleDeliveries[0]
+        
+        let totalDeliveryFee = sut.calculateDeliveryFee(for: delivery)
+        
+        let expectedFee = Double(delivery.deliveryFee.replacingOccurrences(of: "$", with: "")) ?? 0.0
+        let expectedSurcharge = Double(delivery.surcharge.replacingOccurrences(of: "$", with: "")) ?? 0.0
+        let expectedTotal = String(format: "$%.2f", expectedFee + expectedSurcharge)
+        
+        XCTAssertEqual(totalDeliveryFee, expectedTotal)
     }
 }

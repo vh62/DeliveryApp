@@ -32,9 +32,10 @@ class DeliveryListViewModel {
             deliveries = try modelContext.fetch(descriptor)
             
         } catch {
-            print("Fetch delivery failed")
+            errorMessage = "Error fetching deliveries: \(error)"
         }
     }
+    
     
     func loadMoreContentIfNeeded(currentItem: Delivery?) {
         guard let currentItem = currentItem,
@@ -45,6 +46,13 @@ class DeliveryListViewModel {
         Task {
             await fetchDeliveries()
         }
+    }
+    
+    func calculateDeliveryFee(for delivery: Delivery) -> String {
+        let fee = Double(delivery.deliveryFee.replacingOccurrences(of: "$", with: "")) ?? 0.0
+        let charge = Double(delivery.surcharge.replacingOccurrences(of: "$", with: "")) ?? 0.0
+        let total = fee + charge
+        return String(format: "$%.2f", total)
     }
     
     @MainActor
@@ -79,7 +87,7 @@ class DeliveryListViewModel {
             favorites = try modelContext.fetch(descriptor)
             print(favorites)
         } catch {
-            print("Fetch favorite failed")
+            errorMessage = "Error fetching favorites: \(error)"
         }
     }
     
@@ -88,7 +96,6 @@ class DeliveryListViewModel {
         if let favourite = favorites.first(where: { $0.delivery?.id == delivery.id }) {
             modelContext.delete(favourite)
         } else {
-            print("inserting favorite")
             modelContext.insert(Favorite(delivery: delivery))
         }
         fetchfavoriteData()
@@ -103,7 +110,7 @@ class DeliveryListViewModel {
             print("deleting favorites")
             try modelContext.delete(model: Favorite.self)
         } catch {
-            print("Unable to clear local storage: \(error)")
+            errorMessage = "Unable to clear local storage: \(error)"
         }
     }
 }
