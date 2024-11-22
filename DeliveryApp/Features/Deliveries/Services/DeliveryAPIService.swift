@@ -15,28 +15,27 @@ class DeliveryAPIService: DeliveryService {
     private let networkService: NetworkService
     private let urlBuilder: URLBuilder
     private let responseHandler: ResponseHandler
-    private let endpoint = "https://66e3a4c1d2405277ed11662b.mockapi.io/deliveries"
+    private let errorHandler: ErrorHandler
+    private let config: APIConfig
     
-    init(networkService: NetworkService = URLNetworkService(), urlBuilder: URLBuilder = DeliveryURLBuilder(), responseHandler: ResponseHandler = JSONResponseHandler()) {
+    init(networkService: NetworkService = URLNetworkService(), urlBuilder: URLBuilder = DeliveryURLBuilder(), responseHandler: ResponseHandler = JSONResponseHandler(),
+         errorHandler: ErrorHandler = DeliveryErrorHandler(),
+         config: APIConfig = .current) {
         self.networkService = networkService
         self.urlBuilder = urlBuilder
         self.responseHandler = responseHandler
+        self.errorHandler = errorHandler
+        self.config = config
     }
     
     func getDeliveries(page: Int? = nil, limit: Int? = nil) async throws -> [Delivery] {
-       do {
-           let url = try urlBuilder.buildURL(endpoint: endpoint, page: page, limit: limit)
-           let data = try await networkService.fetchData(from: url)
-           return try responseHandler.decode(data)
-       } catch URLError.badServerResponse {
-           throw APIError.invalidResponse
-       } catch URLError.notConnectedToInternet {
-           throw APIError.unableToComplete
-       } catch is DecodingError {
-           throw APIError.invalidData
-       } catch {
-           throw APIError.unableToComplete
-       }
+        do {
+            let url = try urlBuilder.buildURL(endpoint: "\(config.baseURL)/deliveries", page: page, limit: limit)
+            let data = try await networkService.fetchData(from: url)
+            return try responseHandler.decode(data)
+        } catch {
+            throw errorHandler.handle(error)
+        }
     }
 }
 
