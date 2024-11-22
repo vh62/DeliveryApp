@@ -12,14 +12,14 @@ import SwiftUI
 @Observable
 class DeliveryListViewModel {
     private let modelContext: ModelContext
+    private let deliveryService: DeliveryService
+    
     let itemsPerPage = 20
     var deliveries = [Delivery]()
     var favorites = [Favorite]()
     var isLoading = false
     var currentPage = 1
     var errorMessage: String?
-    
-    private let deliveryService: DeliveryService
     
     init( modelContext: ModelContext, deliveryService: DeliveryService = DeliveryAPIService()) {
         self.modelContext = modelContext
@@ -46,13 +46,6 @@ class DeliveryListViewModel {
         Task {
             await fetchDeliveries()
         }
-    }
-    
-    func calculateDeliveryFee(for delivery: Delivery) -> String {
-        let fee = Double(delivery.deliveryFee.replacingOccurrences(of: "$", with: "")) ?? 0.0
-        let charge = Double(delivery.surcharge.replacingOccurrences(of: "$", with: "")) ?? 0.0
-        let total = fee + charge
-        return String(format: "$%.2f", total)
     }
     
     @MainActor
@@ -105,9 +98,15 @@ class DeliveryListViewModel {
         return favorites.contains(where: { $0.delivery?.id == delivery.id })
     }
     
+    func calculateDeliveryFee(for delivery: Delivery) -> String {
+        let fee = Double(delivery.deliveryFee.replacingOccurrences(of: "$", with: "")) ?? 0.0
+        let charge = Double(delivery.surcharge.replacingOccurrences(of: "$", with: "")) ?? 0.0
+        let total = fee + charge
+        return String(format: "$%.2f", total)
+    }
+    
     func clearDataInLocalStorage() {
         do {
-            print("deleting favorites")
             try modelContext.delete(model: Favorite.self)
         } catch {
             errorMessage = "Unable to clear local storage: \(error)"
