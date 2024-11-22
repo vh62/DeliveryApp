@@ -35,6 +35,7 @@ struct DeliveryRow: View {
             VStack {
                 if viewModel.isFavorite(delivery) {
                     Image(systemName: "heart.fill")
+                        .accessibilityIdentifier("favoriteIcon") 
                     Text(viewModel.calculateDeliveryFee(for: delivery))
                 } else {
                     Text(viewModel.calculateDeliveryFee(for: delivery))
