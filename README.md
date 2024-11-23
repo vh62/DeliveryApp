@@ -54,3 +54,11 @@ git clone [repository-url]
 cd DeliveryApp
 pod install
 open DeliveryApp.xcworkspace
+```
+
+## Things to improve
+* In production environment will move API endpoint to config files
+  - Use environment-based configuration switches
+* Add error logging instead of printing error messages
+  - Different logging for DEBUG/RELEASE builds
+
