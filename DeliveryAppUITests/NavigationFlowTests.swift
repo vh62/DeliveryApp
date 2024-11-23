@@ -74,5 +74,38 @@ final class NavigationFlowTests: XCTestCase {
         backButton.tap()
         XCTAssertTrue(deliveriesList.exists, "Should navigate back to deliveries list")
     }
+    
+    func testFavoriteButtonInteraction() throws {
+        let deliveriesList = app.collectionViews.firstMatch
+        
+        let firstDeliveryCell = deliveriesList.cells.element(boundBy: 0)
+        
+        let filledIcon = firstDeliveryCell.images["favoriteIcon-filled"]
+        let unfilledIcon = firstDeliveryCell.images["favoriteIcon-unfilled"]
+        XCTAssertFalse(filledIcon.exists, "Filled favorite icon should not exist in cell initially")
+        XCTAssertFalse(unfilledIcon.exists, "Unfilled favorite icon should not exist in cell initially")
+        
+        firstDeliveryCell.tap()
+        
+        let backButton = app.buttons["My Deliveries"]
+        XCTAssertTrue(backButton.exists, "Back button should exist")
+        
+        let favoriteButton = app.buttons["Add to Favorite"]
+        XCTAssertTrue(favoriteButton.exists, "FavoriteButton should exists")
+        
+        let unfavoriteIcon = app.images["favoriteIcon-unfilled"]
+        XCTAssertTrue(unfavoriteIcon.exists, "Unfilled heart icon should exist initially")
+        
+        favoriteButton.tap()
+        
+        let favoriteIcon = app.images["favoriteIcon-filled"]
+        XCTAssertTrue(favoriteIcon.waitForExistence(timeout: 3), "Filled heart icon should exist")
+        
+        backButton.tap()
+        
+        XCTAssertTrue(filledIcon.waitForExistence(timeout: 3), "Filled heart icon should exists on the delivery cell")
+    }
 }
+
+
 

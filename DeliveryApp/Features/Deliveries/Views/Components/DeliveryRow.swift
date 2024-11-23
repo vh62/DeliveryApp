@@ -33,13 +33,8 @@ struct DeliveryRow: View {
             }
             Spacer()
             VStack {
-                if viewModel.isFavorite(delivery) {
-                    Image(systemName: "heart.fill")
-                        .accessibilityIdentifier("favoriteIcon") 
-                    Text(viewModel.calculateDeliveryFee(for: delivery))
-                } else {
-                    Text(viewModel.calculateDeliveryFee(for: delivery))
-                }
+                FavoriteIcon(isFilled: viewModel.isFavorite(delivery), alwaysShow: false)
+                Text(viewModel.calculateDeliveryFee(for: delivery))
             }
         }
         .padding()

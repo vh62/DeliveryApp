@@ -45,7 +45,7 @@ struct DeliveryDetailView: View {
                 Button {
                     viewModel.toggleFavorite(delivery)
                 } label: {
-                    FavouriteButton(title: "Add to favourites", isFavourite: viewModel.isFavorite(delivery))
+                    FavoriteButton(title: "Add to Favorite", isFavorite: viewModel.isFavorite(delivery))
                 }
                 .padding(.bottom, 30)
                 

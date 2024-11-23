@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct FavouriteButton: View {
+struct FavoriteButton: View {
     
     let title: String
-    var isFavourite: Bool
+    var isFavorite: Bool
     
     var body: some View {
         HStack {
             Text(title)
-            Image(systemName: isFavourite ? "heart.fill" : "heart")
+            FavoriteIcon(isFilled: isFavorite, alwaysShow: true)
         }
         .font(.title3)
         .fontWeight(.semibold)
@@ -27,5 +27,5 @@ struct FavouriteButton: View {
 }
 
 #Preview {
-    FavouriteButton(title: "Favourites", isFavourite: true)
+    FavoriteButton(title: "Favourites", isFavorite: true)
 }
