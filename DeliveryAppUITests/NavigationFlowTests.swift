@@ -26,7 +26,7 @@ final class NavigationFlowTests: XCTestCase {
         let firstDeliveryCell = deliveriesList.cells.element(boundBy: 0)
         
         let imageView = firstDeliveryCell.images.firstMatch
-        XCTAssertTrue(imageView.exists, "Image view should exist")
+        XCTAssertTrue(imageView.waitForExistence(timeout: 3), "Image view should exist")
         
         let fromText = app.staticTexts["From:"]
         XCTAssertTrue(fromText.exists, "From: text should exist")
