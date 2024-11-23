@@ -9,6 +9,7 @@ Pods/
 # Ensures project file is committed
 !*.xcodeproj
 
-# Exclude these workspace/project specific files
-*.xcworkspace/xcuserdata/
-*.xcodeproj/xcuserdata/
+# Don't ignore shared schemes
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/xcshareddata/xcschemes/
+!*.xcodeproj/xcshareddata/xcschemes/*.xcscheme
