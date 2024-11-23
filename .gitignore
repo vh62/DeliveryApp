@@ -1,0 +1,14 @@
+# CocoaPods
+Pods/
+# Uncomment the next line if you want to commit the Pods directory
+# !Pods/
+
+# Ensures the workspace is committed
+!*.xcworkspace
+
+# Ensures project file is committed
+!*.xcodeproj
+
+# Exclude these workspace/project specific files
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
